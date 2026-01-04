@@ -1,0 +1,145 @@
+:root {
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #111827;
+  background: #f3f4f6;
+}
+
+* { box-sizing: border-box; }
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.card {
+  width: 420px;
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.card.wide {
+  width: min(980px, 100%);
+}
+
+h1 { margin: 0 0 6px 0; font-size: 22px; }
+h2 { margin: 0 0 12px 0; font-size: 16px; }
+
+.muted { color: #6b7280; margin: 0; }
+.error { color: #b91c1c; margin-top: 12px; }
+
+.label { display: block; margin-top: 12px; font-size: 12px; color: #374151; }
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  outline: none;
+}
+.input:focus { border-color: #9ca3af; }
+
+.btn {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: #111827;
+  color: white;
+  cursor: pointer;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn.secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.row.wrap { flex-wrap: wrap; }
+
+.hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 18px 0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 16px;
+}
+
+@media (max-width: 860px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.listItem:last-child { border-bottom: none; }
+
+.pill {
+  font-size: 12px;
+  padding: 4px 8px;
+  background: #f3f4f6;
+  border-radius: 999px;
+  color: #374151;
+}
+
+.cardBtn {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  background: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+.cardBtn.selected {
+  border-color: #111827;
+  outline: 2px solid #111827;
+}
+
+.summary {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  gap: 18px;
+}
+
+.footnote {
+  margin-top: 14px;
+  font-size: 12px;
+}
