@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   db,
   ensureAnonAuth,
@@ -28,6 +28,7 @@ const CARD_VALUES = [0, 1, 2, 3, 5, 8, 13] as const;
 
 export default function Room() {
   const nav = useNavigate();
+  const location = useLocation();
   const params = useParams();
   const code = useMemo(() => normalizeRoomCode(params.code || ""), [params.code]);
 
@@ -40,14 +41,15 @@ export default function Room() {
   const [ticket, setTicket] = useState("");
   const [err, setErr] = useState<string | null>(null);
 
-  // If the user has no name stored (e.g. they followed a direct link),
-  // send them to the lobby with the room code pre-filled so they can join properly.
+  // If the user arrived via a direct link (no { joined: true } in navigation state),
+  // redirect them to the lobby with the room code pre-filled.
+  // Navigation state is never present on a hard load/direct link, only on in-app nav.
   useEffect(() => {
-    const storedName = localStorage.getItem("pp_name");
-    if (!storedName || storedName.trim().length === 0) {
+    const joinedViaApp = (location.state as any)?.joined === true;
+    if (!joinedViaApp) {
       nav(`/?code=${code}`, { replace: true });
     }
-  }, [code, nav]);
+  }, [code, location.state, nav]);
 
   const isOwner = useMemo(() => {
     if (!room || !uid) return false;

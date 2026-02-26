@@ -24,7 +24,8 @@ export default function Home() {
     try {
       localStorage.setItem("pp_name", name.trim());
       const roomCode = await createRoom({ name });
-      nav(`/room/${roomCode}`);
+      // Pass { joined: true } so Room.tsx knows this navigation came from within the app
+      nav(`/room/${roomCode}`, { state: { joined: true } });
     } catch (e: any) {
       setErr(e?.message || "Failed to create room.");
     } finally {
@@ -40,7 +41,8 @@ export default function Home() {
       localStorage.setItem("pp_name", name.trim());
       const roomCode = normalizeRoomCode(code);
       await joinRoom({ code: roomCode, name });
-      nav(`/room/${roomCode}`);
+      // Pass { joined: true } so Room.tsx knows this navigation came from within the app
+      nav(`/room/${roomCode}`, { state: { joined: true } });
     } catch (e: any) {
       setErr(e?.message || "Failed to join room.");
     } finally {
