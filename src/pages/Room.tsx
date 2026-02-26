@@ -40,6 +40,15 @@ export default function Room() {
   const [ticket, setTicket] = useState("");
   const [err, setErr] = useState<string | null>(null);
 
+  // If the user has no name stored (e.g. they followed a direct link),
+  // send them to the lobby with the room code pre-filled so they can join properly.
+  useEffect(() => {
+    const storedName = localStorage.getItem("pp_name");
+    if (!storedName || storedName.trim().length === 0) {
+      nav(`/?code=${code}`, { replace: true });
+    }
+  }, [code, nav]);
+
   const isOwner = useMemo(() => {
     if (!room || !uid) return false;
     return room.createdBy === uid;
@@ -83,46 +92,45 @@ export default function Room() {
   }, []);
 
   // Subscribe: room + participants + round + votes
-	 useEffect(() => {
-	  if (!code) return;
+  useEffect(() => {
+    if (!code) return;
 
-	  let unsubRoom: Unsubscribe | null = null;
-	  let unsubParticipants: Unsubscribe | null = null;
+    let unsubRoom: Unsubscribe | null = null;
+    let unsubParticipants: Unsubscribe | null = null;
 
-	  setErr(null);
+    setErr(null);
 
-	  // Room listener
-	  const roomRef = doc(db, "rooms", code);
-	  unsubRoom = onSnapshot(
-		roomRef,
-		(snap) => {
-		  if (!snap.exists()) {
-			setErr("Room not found or you do not have access.");
-			setRoom(null);
-			return;
-		  }
-		  const data = snap.data() as RoomDoc;
-		  setRoom(data);
-		},
-		(e) => setErr(e?.message || "Failed to read room.")
-	  );
+    // Room listener
+    const roomRef = doc(db, "rooms", code);
+    unsubRoom = onSnapshot(
+      roomRef,
+      (snap) => {
+        if (!snap.exists()) {
+          setErr("Room not found or you do not have access.");
+          setRoom(null);
+          return;
+        }
+        const data = snap.data() as RoomDoc;
+        setRoom(data);
+      },
+      (e) => setErr(e?.message || "Failed to read room.")
+    );
 
-	  // Participants listener
-	  const participantsRef = collection(db, "rooms", code, "participants");
-	  unsubParticipants = onSnapshot(
-		query(participantsRef, orderBy("joinedAt", "asc")),
-		(snap) => {
-		  setParticipants(snap.docs.map((d) => d.data() as ParticipantDoc));
-		},
-		(e) => setErr(e?.message || "Failed to read participants.")
-	  );
+    // Participants listener
+    const participantsRef = collection(db, "rooms", code, "participants");
+    unsubParticipants = onSnapshot(
+      query(participantsRef, orderBy("joinedAt", "asc")),
+      (snap) => {
+        setParticipants(snap.docs.map((d) => d.data() as ParticipantDoc));
+      },
+      (e) => setErr(e?.message || "Failed to read participants.")
+    );
 
-	  return () => {
-		unsubRoom?.();
-		unsubParticipants?.();
-	  };
-	}, [code]);
-
+    return () => {
+      unsubRoom?.();
+      unsubParticipants?.();
+    };
+  }, [code]);
 
   // Round + votes listener (depends on room.currentRoundId)
   useEffect(() => {

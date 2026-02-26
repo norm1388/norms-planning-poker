@@ -1,11 +1,17 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { createRoom, joinRoom, normalizeRoomCode } from "../firebase";
 
 export default function Home() {
   const nav = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const [name, setName] = useState(() => localStorage.getItem("pp_name") || "");
-  const [code, setCode] = useState("");
+  // Pre-fill room code from ?code= query param (e.g. redirected from a direct room link)
+  const [code, setCode] = useState(() => {
+    const param = searchParams.get("code");
+    return param ? param.toUpperCase().slice(0, 4) : "";
+  });
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
